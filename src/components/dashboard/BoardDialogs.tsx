@@ -4,7 +4,7 @@ import { useForm } from "../../hooks/useForm";
 import { useToast } from "../../hooks/useToast";
 import { getAncestors } from "../../lib/folderTree";
 import { renameBoardSchema } from "../../lib/schemas";
-import { folders } from "../../mocks/workspace";
+import { useFolders } from "../../folders/FoldersContext";
 import type { Board } from "../../types/workspace";
 import { CustomInput } from "../ui/CustomInput";
 import { CustomSelect } from "../ui/CustomSelect";
@@ -14,13 +14,6 @@ type BoardDialogProps = {
   open: boolean;
   onClose: () => void;
 };
-
-const folderOptions = folders.map((folder) => ({
-  value: folder.id,
-  label: getAncestors(folders, folder.id)
-    .map((item) => item.name)
-    .join(" / "),
-}));
 
 export function RenameBoardModal({ board, open, onClose }: BoardDialogProps) {
   const toast = useToast();
@@ -49,7 +42,14 @@ export function RenameBoardModal({ board, open, onClose }: BoardDialogProps) {
 
 export function MoveBoardModal({ board, open, onClose }: BoardDialogProps) {
   const toast = useToast();
+  const { folders } = useFolders();
   const [targetId, setTargetId] = useState(board.folderId);
+  const folderOptions = folders.map((folder) => ({
+    value: folder.id,
+    label: getAncestors(folders, folder.id)
+      .map((item) => item.name)
+      .join(" / "),
+  }));
   const target = folderOptions.find((option) => option.value === targetId);
 
   function handleMove() {

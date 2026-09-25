@@ -1,10 +1,12 @@
-import { App, Button, Pagination, Select, Table, type TableColumnsType } from "antd";
+import { Button, Pagination, Select, Table, type TableColumnsType } from "antd";
 import { useEffect, useState } from "react";
 import { LuSquareKanban, LuStar } from "react-icons/lu";
 import { Link } from "react-router";
+import { useConfirm } from "../../hooks/useConfirm";
 import { useToast } from "../../hooks/useToast";
 import { pluralize } from "../../lib/folderTree";
-import { currentMember, findMemberByFirstName, folders } from "../../mocks/workspace";
+import { useFolders } from "../../folders/FoldersContext";
+import { currentMember, findMemberByFirstName } from "../../mocks/workspace";
 import type { Board } from "../../types/workspace";
 import { MemberAvatar } from "../ui/MemberAvatar";
 import { BoardActions } from "./BoardActions";
@@ -24,7 +26,8 @@ type BoardTableProps = {
 
 export function BoardTable({ boards, starredIds, onToggleStar, showFolder }: BoardTableProps) {
   const toast = useToast();
-  const { modal } = App.useApp();
+  const confirm = useConfirm();
+  const { folders } = useFolders();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -54,21 +57,20 @@ export function BoardTable({ boards, starredIds, onToggleStar, showFolder }: Boa
     setSelectedIds([]);
   }
 
-  function deleteSelected() {
-    modal.confirm({
-      centered: true,
-      title: `Move ${pluralize(selectedCount, "board")} to Trash?`,
-      content: "You can restore them from Trash for 30 days.",
-      okText: "Move to Trash",
-      okButtonProps: { danger: true },
-      onOk: () => {
-        const count = selectedCount;
-        setSelectedIds([]);
-        toast.warning(`${pluralize(count, "board")} moved to Trash`, "They'll be deleted after 30 days.", {
-          label: "Undo",
-          onClick: () => toast.success(`${pluralize(count, "board")} restored`),
-        });
-      },
+  async function deleteSelected() {
+    const count = selectedCount;
+    const isConfirmed = await confirm({
+      title: `Move ${pluralize(count, "board")} to Trash?`,
+      description: "You can restore them from Trash for 30 days.",
+      confirmLabel: "Move to Trash",
+      isDanger: true,
+    });
+    if (!isConfirmed) return;
+
+    setSelectedIds([]);
+    toast.warning(`${pluralize(count, "board")} moved to Trash`, "They'll be deleted after 30 days.", {
+      label: "Undo",
+      onClick: () => toast.success(`${pluralize(count, "board")} restored`),
     });
   }
 

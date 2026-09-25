@@ -44,6 +44,19 @@ export const createWorkspaceSchema = z.object({
   name: z.string().trim().min(2, "Use at least 2 characters.").max(40, "Keep the name under 40 characters."),
 });
 
+export const folderSchema = z.object({
+  name: z.string().trim().min(1, "Enter a folder name.").max(60, "Keep the name under 60 characters."),
+});
+
 export function isValidEmail(value: string) {
   return z.email().safeParse(value).success;
 }
+
+export const profileSchema = z.object({
+  name: z.string().trim().min(1, "Enter your name.").max(60, "Keep your name under 60 characters."),
+});
+
+export const changeEmailSchema = z.object({
+  email,
+  password: z.string().min(1, "Enter your current password."),
+});

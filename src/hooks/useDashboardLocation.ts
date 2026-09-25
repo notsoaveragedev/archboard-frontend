@@ -1,5 +1,5 @@
 import { useLocation, useMatch, useSearchParams } from "react-router";
-import { folders } from "../mocks/workspace";
+import { useFolders } from "../folders/FoldersContext";
 
 export type DashboardView = "recent" | "shared" | "starred" | "templates" | "trash";
 
@@ -25,6 +25,7 @@ const VIEW_BY_PATH = Object.fromEntries(
 
 // useMatch works from the layout too, where useParams wouldn't see the child route's folderId.
 export function useDashboardLocation() {
+  const { folders } = useFolders();
   const folderMatch = useMatch("/app/folders/:folderId");
   const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();

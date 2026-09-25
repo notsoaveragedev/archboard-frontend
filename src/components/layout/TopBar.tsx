@@ -4,7 +4,8 @@ import { Link } from "react-router";
 import { VIEW_LABELS, useDashboardLocation } from "../../hooks/useDashboardLocation";
 import { searchShortcutLabel } from "../../hooks/useSearchShortcut";
 import { getAncestors } from "../../lib/folderTree";
-import { folders, members } from "../../mocks/workspace";
+import { useFolders } from "../../folders/FoldersContext";
+import { members } from "../../mocks/workspace";
 import { useWorkspace } from "../../workspace/WorkspaceContext";
 import { MemberAvatar } from "../ui/MemberAvatar";
 import { NewMenu } from "./NewMenu";
@@ -19,6 +20,7 @@ type TopBarProps = {
 export function TopBar({ onInvite, onOpenSearch }: TopBarProps) {
   const { view, folder } = useDashboardLocation();
   const { currentWorkspace } = useWorkspace();
+  const { folders } = useFolders();
 
   const crumbs = folder
     ? getAncestors(folders, folder.id).map((item, index, path) => ({

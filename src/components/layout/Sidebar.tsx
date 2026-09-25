@@ -1,7 +1,8 @@
 import { Button } from "antd";
-import { LuLogOut, LuPlus, LuUserPlus } from "react-icons/lu";
+import { LuLogOut, LuPlus, LuSettings, LuUserPlus } from "react-icons/lu";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../auth/AuthContext";
+import { useConfirm } from "../../hooks/useConfirm";
 import { useWorkspaceActions } from "../../hooks/useWorkspaceActions";
 import { currentMember } from "../../mocks/workspace";
 import { Logo } from "../Logo";
@@ -54,15 +55,20 @@ export function Sidebar({ onInvite }: { onInvite: () => void }) {
 
 function UserRow() {
   const { user, signOut } = useAuth();
+  const confirm = useConfirm();
   const navigate = useNavigate();
   const member = user ? { ...currentMember, name: user.name, email: user.email } : currentMember;
 
   async function handleLogout() {
-    try {
-      await signOut();
-    } finally {
-      navigate("/login", { replace: true });
-    }
+    const isConfirmed = await confirm({
+      title: "Log out of archboard?",
+      description: "You'll need to sign in again to get back to your boards.",
+      confirmLabel: "Log out",
+    });
+    if (!isConfirmed) return;
+
+    await signOut();
+    navigate("/login", { replace: true });
   }
 
   return (
@@ -72,6 +78,15 @@ function UserRow() {
         <span className="truncate font-medium">{member.name}</span>
         <span className="truncate text-2xs text-muted">{member.email}</span>
       </span>
+      <Button
+        type="text"
+        size="small"
+        icon={<LuSettings className="size-4" />}
+        aria-label="Settings"
+        title="Settings"
+        onClick={() => navigate("/app/settings/profile")}
+        className="text-muted"
+      />
       <Button
         type="text"
         size="small"

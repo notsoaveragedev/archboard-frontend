@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router";
+import { useFolders } from "../folders/FoldersContext";
 import { useDashboardLocation } from "./useDashboardLocation";
 import { useToast } from "./useToast";
 
@@ -7,11 +8,12 @@ export function useWorkspaceActions() {
   const toast = useToast();
   const navigate = useNavigate();
   const { folder } = useDashboardLocation();
+  const { openCreateFolder } = useFolders();
   const location = folder ? folder.name : "your workspace";
 
   return {
     createBoard: () => toast.success("Board created", `"Untitled board" was added to ${location}.`),
-    createFolder: () => toast.success("Folder created", `"Untitled folder" was added to ${location}.`),
+    createFolder: () => openCreateFolder(folder?.id ?? null),
     startRetro: () =>
       toast.success("Retrospective ready", "Timer, dot voting and private mode are set up on your new board."),
     createFromTemplate: (templateName: string) =>

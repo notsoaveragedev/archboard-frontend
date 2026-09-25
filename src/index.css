@@ -80,6 +80,16 @@
   --shadow-overlay: 0 0 0 1px rgb(11 18 32 / 0.06), 0 1.5rem 3rem -0.75rem rgb(11 18 32 / 0.28);
 
   --animate-rise: rise 0.15s ease-out;
+  --animate-progress: progress 1s ease-in-out infinite;
+
+  @keyframes progress {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(300%);
+    }
+  }
 
   @keyframes rise {
     from {

@@ -59,12 +59,10 @@ export function resetPassword(resetToken: string, password: string) {
   return post<void>("/auth/reset-password", { resetToken, password });
 }
 
+// Signing out locally must always succeed; revoking the server session is best-effort.
 export async function logout() {
-  try {
-    await post("/auth/logout");
-  } finally {
-    setAccessToken(null);
-  }
+  await post("/auth/logout").catch(() => undefined);
+  setAccessToken(null);
 }
 
 export async function restoreSession() {

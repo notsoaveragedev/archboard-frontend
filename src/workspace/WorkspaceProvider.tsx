@@ -2,16 +2,7 @@ import { useState, type ReactNode } from "react";
 import { workspaces as initialWorkspaces } from "../mocks/workspace";
 import type { Workspace } from "../types/workspace";
 import { WorkspaceContext } from "./WorkspaceContext";
-
-const TILE_COLORS = ["bg-ink", "bg-[#8E4EC6]", "bg-[#12A594]", "bg-[#F76B15]", "bg-brand"];
-
-function initialsOf(name: string) {
-  return name
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((word) => word[0]?.toUpperCase() ?? "")
-    .join("");
-}
+import { TILE_COLORS, initialsOf } from "./workspaceUtils";
 
 export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const [workspaces, setWorkspaces] = useState(initialWorkspaces);
@@ -22,6 +13,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     const workspace: Workspace = {
       id: crypto.randomUUID(),
       name,
+      slug: name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
       initials: initialsOf(name),
       memberCount: 1,
       plan: "Team",
@@ -32,8 +24,23 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     return workspace;
   }
 
+  function updateWorkspace(workspaceId: string, changes: Partial<Workspace>) {
+    setWorkspaces((current) =>
+      current.map((workspace) => (workspace.id === workspaceId ? { ...workspace, ...changes } : workspace)),
+    );
+  }
+
+  // Leaving or deleting moves you to the next workspace you still belong to.
+  function removeWorkspace(workspaceId: string) {
+    const remaining = workspaces.filter((workspace) => workspace.id !== workspaceId);
+    setWorkspaces(remaining);
+    if (currentId === workspaceId) setCurrentId(remaining[0].id);
+  }
+
   return (
-    <WorkspaceContext value={{ workspaces, currentWorkspace, switchWorkspace: setCurrentId, createWorkspace }}>
+    <WorkspaceContext
+      value={{ workspaces, currentWorkspace, switchWorkspace: setCurrentId, createWorkspace, updateWorkspace, removeWorkspace }}
+    >
       {children}
     </WorkspaceContext>
   );

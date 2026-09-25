@@ -1,7 +1,8 @@
-import { LuFolder } from "react-icons/lu";
 import { Link } from "react-router";
+import { FolderGlyph } from "../folders/FolderGlyph";
 import { getChildren, pluralize } from "../../lib/folderTree";
 import type { Board, Folder } from "../../types/workspace";
+import { FolderActionsMenu } from "../folders/FolderActionsMenu";
 
 type FolderCardsProps = {
   folders: Folder[];
@@ -25,19 +26,23 @@ export function FolderCards({ folders, allFolders, boards }: FolderCardsProps) {
       </h2>
       <div className="grid grid-cols-[repeat(auto-fill,minmax(13.75rem,1fr))] gap-3">
         {folders.map((folder) => (
-          <Link
+          <div
             key={folder.id}
-            to={`/app/folders/${folder.id}`}
-            className="flex items-center gap-3 rounded-lg border border-line bg-surface p-3 text-ink transition-colors hover:border-line-strong hover:bg-hover-subtle hover:text-ink"
+            className="group relative flex items-center gap-3 rounded-lg border border-line bg-surface p-3 transition-colors hover:border-line-strong hover:bg-hover-subtle"
           >
-            <span className="flex size-8 shrink-0 items-center justify-center rounded-md border border-line bg-surface text-muted">
-              <LuFolder className="size-4" />
-            </span>
-            <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+            <FolderGlyph color={folder.color} icon={folder.icon} variant="tile" className="size-8 [&_svg]:size-4" />
+            <Link
+              to={`/app/folders/${folder.id}`}
+              className="flex min-w-0 flex-1 flex-col gap-0.5 text-ink after:absolute after:inset-0 hover:text-ink"
+            >
               <span className="truncate text-ui font-medium">{folder.name}</span>
               <span className="text-2xs text-muted tabular-nums">{folderMeta(folder, allFolders, boards)}</span>
-            </span>
-          </Link>
+            </Link>
+            <FolderActionsMenu
+              folder={folder}
+              className="relative z-10 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 [&.ant-dropdown-open]:opacity-100"
+            />
+          </div>
         ))}
       </div>
     </section>

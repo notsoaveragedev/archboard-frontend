@@ -1,7 +1,24 @@
+export type FolderColor = "gray" | "blue" | "green" | "amber" | "red" | "purple" | "pink" | "teal";
+export type FolderIcon =
+  | "folder"
+  | "briefcase"
+  | "code"
+  | "server"
+  | "rocket"
+  | "layers"
+  | "palette"
+  | "users"
+  | "book"
+  | "lightbulb"
+  | "target"
+  | "flag";
+
 export type Folder = {
   id: string;
   name: string;
   parentId: string | null;
+  color: FolderColor;
+  icon: FolderIcon;
 };
 
 export type BoardStatus = "live" | "shared" | "draft";
@@ -50,6 +67,7 @@ export type Member = {
 export type Workspace = {
   id: string;
   name: string;
+  slug: string;
   initials: string;
   memberCount: number;
   plan: "Team" | "Personal";

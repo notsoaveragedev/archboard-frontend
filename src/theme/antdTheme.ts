@@ -130,6 +130,10 @@ export const antdTheme: ThemeConfig = {
       borderRadiusSM: 4,
       controlInteractiveSize: 16,
     },
+    Switch: {
+      colorPrimary: palette.ink,
+      colorPrimaryHover: palette.inkHover,
+    },
     Menu: {
       itemHeight: 32,
       itemBorderRadius: 6,

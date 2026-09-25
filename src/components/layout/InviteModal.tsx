@@ -93,7 +93,7 @@ export function InviteModal({ open, onClose }: InviteModalProps) {
             Send
           </Button>
         </div>
-        <span className="text-2xs text-muted">Press Enter or comma to add. Editors can change boards, viewers can only comment.</span>
+        <span className="text-2xs text-muted">Press Enter or comma to add. Editors can change boards, viewers can only view them.</span>
       </div>
 
       <div className="flex max-h-65 flex-col gap-1 overflow-auto border-t border-line px-5 py-3">

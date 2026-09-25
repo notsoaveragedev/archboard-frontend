@@ -20,7 +20,9 @@ import { VIEW_PATHS, useDashboardLocation } from "../../hooks/useDashboardLocati
 import { useWorkspaceActions } from "../../hooks/useWorkspaceActions";
 import { editedPhrase } from "../dashboard/boardStatus";
 import { countBoardsInTree, getAncestors, pluralize } from "../../lib/folderTree";
-import { boards, folders, templates } from "../../mocks/workspace";
+import { useFolders } from "../../folders/FoldersContext";
+import { boards, templates } from "../../mocks/workspace";
+import type { Folder } from "../../types/workspace";
 import { CustomInput } from "../ui/CustomInput";
 
 type PaletteItem = {
@@ -50,7 +52,7 @@ function matchScore(text: string, query: string) {
   return value.includes(query) ? 2 : -1;
 }
 
-function folderPath(folderId: string) {
+function folderPath(folders: Folder[], folderId: string) {
   return getAncestors(folders, folderId)
     .map((folder) => folder.name)
     .join(" / ");
@@ -97,6 +99,7 @@ export function CommandPalette({ open, onClose, onInvite }: CommandPaletteProps)
 
 function PaletteContent({ onClose, onInvite }: Omit<CommandPaletteProps, "open">) {
   const navigate = useNavigate();
+  const { folders } = useFolders();
   const { setQuery } = useDashboardLocation();
   const actions = useWorkspaceActions();
   const [search, setSearch] = useState("");
@@ -117,11 +120,44 @@ function PaletteContent({ onClose, onInvite }: Omit<CommandPaletteProps, "open">
   }
 
   const quickActions: PaletteItem[] = [
-    { id: "a-board", group: "Quick actions", icon: <LuPlus />, title: "New board", hint: <kbd className="kbd">B</kbd>, run: () => runAndClose(actions.createBoard) },
-    { id: "a-retro", group: "Quick actions", icon: <LuTimer />, title: "New retrospective", hint: <kbd className="kbd">R</kbd>, run: () => runAndClose(actions.startRetro) },
-    { id: "a-folder", group: "Quick actions", icon: <LuFolderPlus />, title: "New folder", hint: <kbd className="kbd">F</kbd>, run: () => runAndClose(actions.createFolder) },
-    { id: "a-invite", group: "Quick actions", icon: <LuUserPlus />, title: "Invite teammates", run: () => runAndClose(onInvite) },
-    { id: "a-templates", group: "Quick actions", icon: <LuLayoutTemplate />, title: "Browse templates", run: () => go(VIEW_PATHS.templates) },
+    {
+      id: "a-board",
+      group: "Quick actions",
+      icon: <LuPlus />,
+      title: "New board",
+      hint: <kbd className="kbd">B</kbd>,
+      run: () => runAndClose(actions.createBoard),
+    },
+    {
+      id: "a-retro",
+      group: "Quick actions",
+      icon: <LuTimer />,
+      title: "New retrospective",
+      hint: <kbd className="kbd">R</kbd>,
+      run: () => runAndClose(actions.startRetro),
+    },
+    {
+      id: "a-folder",
+      group: "Quick actions",
+      icon: <LuFolderPlus />,
+      title: "New folder",
+      hint: <kbd className="kbd">F</kbd>,
+      run: () => runAndClose(actions.createFolder),
+    },
+    {
+      id: "a-invite",
+      group: "Quick actions",
+      icon: <LuUserPlus />,
+      title: "Invite teammates",
+      run: () => runAndClose(onInvite),
+    },
+    {
+      id: "a-templates",
+      group: "Quick actions",
+      icon: <LuLayoutTemplate />,
+      title: "Browse templates",
+      run: () => go(VIEW_PATHS.templates),
+    },
   ];
 
   const goToItems: PaletteItem[] = [
@@ -136,7 +172,7 @@ function PaletteContent({ onClose, onInvite }: Omit<CommandPaletteProps, "open">
     group,
     icon: <LuSquareKanban />,
     title: board.name,
-    secondary: folderPath(board.folderId),
+    secondary: folderPath(folders, board.folderId),
     hint: `Edited ${editedPhrase(board.editedLabel)}`,
     path: `/app/boards/${board.id}`,
     run: () => go(`/app/boards/${board.id}`),
@@ -167,13 +203,13 @@ function PaletteContent({ onClose, onInvite }: Omit<CommandPaletteProps, "open">
         onClose();
       },
     };
-    const matchedBoards = ranked(boards, (board) => `${board.name} ${folderPath(board.folderId)}`);
+    const matchedBoards = ranked(boards, (board) => `${board.name} ${folderPath(folders, board.folderId)}`);
     const matchedFolders = ranked(folders, (folder) => folder.name).map((folder) => ({
       id: `f-${folder.id}`,
       group: "Folders",
       icon: <LuFolder />,
       title: folder.name,
-      secondary: folderPath(folder.id),
+      secondary: folderPath(folders, folder.id),
       hint: pluralize(countBoardsInTree(folders, boards, folder.id), "board"),
       path: `/app/folders/${folder.id}`,
       run: () => go(`/app/folders/${folder.id}`),

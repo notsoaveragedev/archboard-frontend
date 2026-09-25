@@ -2,6 +2,7 @@ import { Button, Dropdown, type MenuProps } from "antd";
 import { useState } from "react";
 import { LuEllipsis } from "react-icons/lu";
 import { useNavigate } from "react-router";
+import { useConfirm } from "../../hooks/useConfirm";
 import { useToast } from "../../hooks/useToast";
 import type { Board } from "../../types/workspace";
 import { MoveBoardModal, RenameBoardModal } from "./BoardDialogs";
@@ -18,9 +19,25 @@ type Dialog = "rename" | "move" | null;
 
 export function BoardActions({ board, isStarred, onToggleStar, className = "" }: BoardActionsProps) {
   const toast = useToast();
+  const confirm = useConfirm();
   const navigate = useNavigate();
   const [dialog, setDialog] = useState<Dialog>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  async function moveToTrash() {
+    const isConfirmed = await confirm({
+      title: `Move "${board.name}" to Trash?`,
+      description: "You can restore it from Trash for 30 days.",
+      confirmLabel: "Move to Trash",
+      isDanger: true,
+    });
+    if (!isConfirmed) return;
+
+    toast.warning("Moved to Trash", `"${board.name}" can be restored for 30 days.`, {
+      label: "Undo",
+      onClick: () => toast.success("Board restored", `"${board.name}" is back in its folder.`),
+    });
+  }
 
   async function copyShareLink() {
     await navigator.clipboard.writeText(`${window.location.origin}${boardPath(board)}`);
@@ -48,11 +65,7 @@ export function BoardActions({ board, isStarred, onToggleStar, className = "" }:
       key: "delete",
       label: "Move to Trash",
       danger: true,
-      onClick: () =>
-        toast.warning("Moved to Trash", `"${board.name}" can be restored for 30 days.`, {
-          label: "Undo",
-          onClick: () => toast.success("Board restored", `"${board.name}" is back in its folder.`),
-        }),
+      onClick: moveToTrash,
     },
   ];
 

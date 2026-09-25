@@ -9,7 +9,8 @@ import { FolderCards } from "../../components/dashboard/FolderCards";
 import { TemplateGrid } from "../../components/dashboard/TemplateGrid";
 import { VIEW_LABELS, useDashboardLocation, type DashboardView } from "../../hooks/useDashboardLocation";
 import { getChildren, pluralize } from "../../lib/folderTree";
-import { boards, currentMember, folders, starredBoardIds, templates } from "../../mocks/workspace";
+import { useFolders } from "../../folders/FoldersContext";
+import { boards as allBoards, currentMember, starredBoardIds, templates } from "../../mocks/workspace";
 import type { Board, Folder } from "../../types/workspace";
 import { useWorkspace } from "../../workspace/WorkspaceContext";
 
@@ -41,13 +42,14 @@ const EMPTY_TITLES: Record<DashboardView, string> = {
 const currentOwner = currentMember.name.split(" ")[0];
 
 type Filters = {
+  boards: Board[];
   view: DashboardView | null;
   folder: Folder | null;
   query: string;
   starredIds: Set<string>;
 };
 
-function getVisibleBoards({ view, folder, query, starredIds }: Filters): Board[] {
+function getVisibleBoards({ boards, view, folder, query, starredIds }: Filters): Board[] {
   const search = query.trim().toLowerCase();
   if (search) return boards.filter((board) => board.name.toLowerCase().includes(search));
   if (folder) return boards.filter((board) => board.folderId === folder.id);
@@ -76,13 +78,16 @@ function sortBoards(list: Board[], sort: SortKey) {
 export function DashboardPage() {
   const { view, folder, query } = useDashboardLocation();
   const { currentWorkspace } = useWorkspace();
+  const { folders } = useFolders();
+  const folderIds = new Set(folders.map((item) => item.id));
+  const boards = allBoards.filter((board) => folderIds.has(board.folderId));
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [sort, setSort] = useState<SortKey>("edited");
   const [starredIds, setStarredIds] = useState(() => new Set(starredBoardIds));
 
   const isSearching = query.trim().length > 0;
   const showTemplates = view === "templates" && !isSearching;
-  const visibleBoards = sortBoards(getVisibleBoards({ view, folder, query, starredIds }), sort);
+  const visibleBoards = sortBoards(getVisibleBoards({ boards, view, folder, query, starredIds }), sort);
   const subfolders = folder && !isSearching ? getChildren(folders, folder.id) : [];
 
   function toggleStar(boardId: string) {
@@ -105,7 +110,11 @@ export function DashboardPage() {
     title = `Results for “${query.trim()}”`;
     emptyTitle = "No boards match your search";
   } else if (folder) {
-    subtitle = [boardCount, subfolders.length > 0 ? pluralize(subfolders.length, "folder") : "", `Shared with ${currentWorkspace.name}`]
+    subtitle = [
+      boardCount,
+      subfolders.length > 0 ? pluralize(subfolders.length, "folder") : "",
+      `Shared with ${currentWorkspace.name}`,
+    ]
       .filter(Boolean)
       .join(" · ");
   } else if (view === "trash") {

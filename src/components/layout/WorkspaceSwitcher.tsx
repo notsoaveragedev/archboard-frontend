@@ -1,6 +1,6 @@
 import { Button, Dropdown, Modal, type MenuProps } from "antd";
 import { useState } from "react";
-import { LuCheck, LuChevronsUpDown, LuPlus, LuUserPlus } from "react-icons/lu";
+import { LuCheck, LuChevronsUpDown, LuPlus, LuSettings, LuUserPlus } from "react-icons/lu";
 import { useNavigate } from "react-router";
 import { useForm } from "../../hooks/useForm";
 import { useToast } from "../../hooks/useToast";
@@ -24,7 +24,13 @@ function workspaceMeta(workspace: Workspace) {
   return `${workspace.plan} · ${pluralize(workspace.memberCount, "member")}`;
 }
 
-export function WorkspaceSwitcher({ onInvite }: { onInvite: () => void }) {
+type WorkspaceSwitcherProps = {
+  onInvite?: () => void;
+  // In settings, switching keeps you on the same settings page instead of going to the dashboard.
+  stayOnPage?: boolean;
+};
+
+export function WorkspaceSwitcher({ onInvite, stayOnPage = false }: WorkspaceSwitcherProps) {
   const toast = useToast();
   const navigate = useNavigate();
   const { workspaces, currentWorkspace, switchWorkspace } = useWorkspace();
@@ -33,7 +39,7 @@ export function WorkspaceSwitcher({ onInvite }: { onInvite: () => void }) {
   function handleSwitch(workspace: Workspace) {
     if (workspace.id === currentWorkspace.id) return;
     switchWorkspace(workspace.id);
-    navigate("/app");
+    if (!stayOnPage) navigate("/app");
     toast.success(`Switched to ${workspace.name}`);
   }
 
@@ -64,10 +70,16 @@ export function WorkspaceSwitcher({ onInvite }: { onInvite: () => void }) {
       onClick: () => setIsCreateOpen(true),
     },
     {
+      key: "settings",
+      icon: <LuSettings />,
+      label: "Workspace settings",
+      onClick: () => navigate("/app/settings/workspace/general"),
+    },
+    {
       key: "invite",
       icon: <LuUserPlus />,
       label: "Invite members",
-      onClick: onInvite,
+      onClick: onInvite ?? (() => navigate("/app/settings/workspace/members")),
     },
   ];
 

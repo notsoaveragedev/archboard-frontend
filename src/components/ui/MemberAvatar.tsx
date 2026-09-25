@@ -1,6 +1,8 @@
 import { Avatar, Tooltip } from "antd";
 import type { Member } from "../../types/workspace";
 
+type AvatarPerson = Pick<Member, "name" | "initials" | "color">;
+
 type AvatarSize = "xs" | "sm";
 
 const SIZES: Record<AvatarSize, { size: string; fontSize: string; border: string }> = {
@@ -9,7 +11,7 @@ const SIZES: Record<AvatarSize, { size: string; fontSize: string; border: string
 };
 
 type MemberAvatarProps = {
-  member: Member;
+  member: AvatarPerson;
   size?: AvatarSize;
   showRing?: boolean;
   showTooltip?: boolean;

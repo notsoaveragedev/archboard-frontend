@@ -3,21 +3,21 @@ import type { Board, Folder, Member, Template, ThumbnailShape, Workspace } from 
 // Temporary data for UI work. Replaced by API calls once the backend is ready.
 
 export const workspaces: Workspace[] = [
-  { id: "platform", name: "Platform Team", initials: "PT", memberCount: 6, plan: "Team", tileClass: "bg-ink" },
-  { id: "design", name: "Design Guild", initials: "DG", memberCount: 12, plan: "Team", tileClass: "bg-[#8E4EC6]" },
-  { id: "personal", name: "Personal", initials: "P", memberCount: 1, plan: "Personal", tileClass: "bg-[#12A594]" },
+  { id: "platform", name: "Platform Team", slug: "platform-team", initials: "PT", memberCount: 6, plan: "Team", tileClass: "bg-ink" },
+  { id: "design", name: "Design Guild", slug: "design-guild", initials: "DG", memberCount: 12, plan: "Team", tileClass: "bg-[#8E4EC6]" },
+  { id: "personal", name: "Personal", slug: "priya", initials: "P", memberCount: 1, plan: "Personal", tileClass: "bg-[#12A594]" },
 ];
 
 export const folders: Folder[] = [
-  { id: "eng", name: "Engineering", parentId: null },
-  { id: "sd", name: "System design", parentId: "eng" },
-  { id: "pay", name: "Payments", parentId: "sd" },
-  { id: "infra", name: "Infrastructure", parentId: "eng" },
-  { id: "rfc", name: "RFC reviews", parentId: "infra" },
-  { id: "retro", name: "Retrospectives", parentId: null },
-  { id: "q4", name: "Sprint retros · Q4", parentId: "retro" },
-  { id: "product", name: "Product & design", parentId: null },
-  { id: "personal", name: "Personal", parentId: null },
+  { id: "eng", name: "Engineering", parentId: null, color: "blue", icon: "code" },
+  { id: "sd", name: "System design", parentId: "eng", color: "gray", icon: "layers" },
+  { id: "pay", name: "Payments", parentId: "sd", color: "green", icon: "folder" },
+  { id: "infra", name: "Infrastructure", parentId: "eng", color: "gray", icon: "server" },
+  { id: "rfc", name: "RFC reviews", parentId: "infra", color: "gray", icon: "book" },
+  { id: "retro", name: "Retrospectives", parentId: null, color: "amber", icon: "target" },
+  { id: "q4", name: "Sprint retros · Q4", parentId: "retro", color: "gray", icon: "flag" },
+  { id: "product", name: "Product & design", parentId: null, color: "purple", icon: "palette" },
+  { id: "personal", name: "Personal", parentId: null, color: "gray", icon: "folder" },
 ];
 
 const node = (x: number, y: number, w = 22, h = 14): ThumbnailShape => ({ x, y, w, h });
