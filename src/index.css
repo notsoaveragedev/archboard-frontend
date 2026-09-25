@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+
+  --color-brand: #2d5bff;
+  --color-brand-hover: #1f45d6;
+  --color-brand-soft: #eaf0ff;
+  --color-brand-muted: #dce8ff;
+
+  --color-ink: #0b1220;
+  --color-muted: #5b6474;
+  --color-subtle: #a3aab6;
+
+  --color-line: #e3e6eb;
+  --color-line-strong: #d5dae1;
+
+  --color-surface: #ffffff;
+  --color-app: #f6f7f9;
+  --color-hover: #f0f2f5;
+
+  --color-success: #16a34a;
+  --color-success-soft: #e8f6ec;
+  --color-warning: #f5a524;
+  --color-warning-soft: #fff6e5;
+  --color-danger: #e5484d;
+  --color-danger-soft: #fdedee;
+  --color-danger-text: #8c1d22;
+
+  --color-sticky-yellow: #fff1b8;
+  --color-sticky-pink: #ffd6e0;
+  --color-sticky-green: #d3f5df;
+  --color-sticky-blue: #dce8ff;
+  --color-sticky-purple: #eadcff;
+  --color-sticky-cream: #fff6e5;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+
+  --shadow-card: 0 4px 12px rgba(11, 18, 32, 0.06);
+  --shadow-pop: 0 8px 24px rgba(11, 18, 32, 0.1);
+}
+
+body {
+  @apply bg-app text-ink font-sans text-[13px] antialiased;
+}
+
+:focus-visible {
+  @apply outline-2 outline-offset-2 outline-brand;
+}
