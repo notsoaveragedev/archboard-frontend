@@ -1,3 +1,6 @@
+/* antd sits between Tailwind base and utilities, so utility classes can override antd. */
+@layer theme, base, antd, components, utilities;
+
 @import "tailwindcss";
 
 @theme {
@@ -8,6 +11,7 @@
   --color-brand-hover: #1f45d6;
   --color-brand-soft: #eaf0ff;
   --color-brand-muted: #dce8ff;
+  --color-brand-faded: #a9bcff;
 
   --color-ink: #0b1220;
   --color-muted: #5b6474;
@@ -26,6 +30,7 @@
   --color-warning-soft: #fff6e5;
   --color-danger: #e5484d;
   --color-danger-soft: #fdedee;
+  --color-danger-line: #f5c2c4;
   --color-danger-text: #8c1d22;
 
   --color-sticky-yellow: #fff1b8;
@@ -43,10 +48,16 @@
   --shadow-pop: 0 8px 24px rgba(11, 18, 32, 0.1);
 }
 
-body {
-  @apply bg-app text-ink font-sans text-[13px] antialiased;
-}
+@layer base {
+  body {
+    @apply bg-app text-ink font-sans text-[13px] antialiased;
+  }
 
-:focus-visible {
-  @apply outline-2 outline-offset-2 outline-brand;
+  a {
+    @apply text-brand hover:text-brand-hover;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-brand;
+  }
 }
