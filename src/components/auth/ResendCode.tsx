@@ -1,7 +1,8 @@
-import { App, Button } from "antd";
+import { Button } from "antd";
 import { useState } from "react";
 import { getErrorMessage } from "../../api/client";
 import { useCountdown } from "../../hooks/useCountdown";
+import { useToast } from "../../hooks/useToast";
 
 const RESEND_COOLDOWN_SECONDS = 30;
 
@@ -10,7 +11,7 @@ function formatSeconds(seconds: number) {
 }
 
 export function ResendCode({ onResend }: { onResend: () => Promise<void> }) {
-  const { message } = App.useApp();
+  const toast = useToast();
   const { seconds, restart } = useCountdown(RESEND_COOLDOWN_SECONDS);
   const [isSending, setIsSending] = useState(false);
 
@@ -18,17 +19,17 @@ export function ResendCode({ onResend }: { onResend: () => Promise<void> }) {
     setIsSending(true);
     try {
       await onResend();
-      message.success("A new code is on its way.");
+      toast.success("New code sent", "Check your inbox. It expires in 10 minutes.");
       restart();
     } catch (error) {
-      message.error(getErrorMessage(error));
+      toast.error("Could not send the code", getErrorMessage(error));
     } finally {
       setIsSending(false);
     }
   }
 
   return (
-    <p className="mt-6 text-center text-[13px] text-muted">
+    <p className="mt-6 text-center text-ui text-muted">
       Didn't get it?{" "}
       {seconds > 0 ? (
         <span>

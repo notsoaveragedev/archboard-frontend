@@ -28,7 +28,7 @@ export function FieldShell({
       {(label || labelAction) && (
         <div className="flex items-center justify-between">
           {label && (
-            <label id={labelId} htmlFor={htmlFor} className={`text-[13px] font-medium ${labelClassName}`}>
+            <label id={labelId} htmlFor={htmlFor} className={`text-ui font-medium ${labelClassName}`}>
               {label}
             </label>
           )}
@@ -39,11 +39,11 @@ export function FieldShell({
       {children}
 
       {error && (
-        <p id={messageId} role="alert" className="text-xs text-danger-text">
+        <p id={messageId} role="alert" className="text-2xs text-danger-text">
           {error}
         </p>
       )}
-      {hint && <div className="text-xs text-muted">{hint}</div>}
+      {hint && <div className="text-2xs text-muted">{hint}</div>}
     </div>
   );
 }

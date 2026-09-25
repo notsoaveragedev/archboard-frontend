@@ -1,7 +1,8 @@
 import { createBrowserRouter, Navigate } from "react-router";
 import { GuestRoute } from "./auth/GuestRoute";
-import { ProtectedRoute } from "./auth/ProtectedRoute";
 import { AuthLayout } from "./layouts/AuthLayout";
+
+const dashboardPage = () => import("./pages/app/DashboardPage").then((m) => ({ Component: m.DashboardPage }));
 
 export const router = createBrowserRouter([
   { path: "/", element: <Navigate to="/app" replace /> },
@@ -49,12 +50,15 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    Component: ProtectedRoute,
+    // Public for now so the dashboard UI can be reviewed without the backend. Move under ProtectedRoute later.
+    lazy: () => import("./layouts/MainLayout").then((m) => ({ Component: m.MainLayout })),
     children: [
-      {
-        path: "app",
-        lazy: () => import("./pages/app/HomePage").then((m) => ({ Component: m.HomePage })),
-      },
+      { path: "app", lazy: dashboardPage },
+      { path: "app/shared", lazy: dashboardPage },
+      { path: "app/starred", lazy: dashboardPage },
+      { path: "app/templates", lazy: dashboardPage },
+      { path: "app/trash", lazy: dashboardPage },
+      { path: "app/folders/:folderId", lazy: dashboardPage },
     ],
   },
 ]);

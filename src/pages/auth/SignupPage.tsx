@@ -63,7 +63,7 @@ export function SignupPage() {
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-xs leading-normal text-muted">
+      <p className="mt-6 text-center text-2xs leading-normal text-muted">
         By creating an account you agree to the Terms and Privacy Policy.
         <br />
         Already have an account?{" "}

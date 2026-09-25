@@ -43,7 +43,7 @@ function MfaForm({ mfaToken }: { mfaToken: string }) {
         <OtpForm label="Authentication code" onVerify={(code) => completeMfa({ mfaToken, code })} />
       )}
 
-      <p className="mt-6 text-center text-[13px] text-muted">
+      <p className="mt-6 text-center text-ui text-muted">
         {useBackupCode ? "Have your authenticator app? " : "Lost access to your app? "}
         <Button
           type="link"

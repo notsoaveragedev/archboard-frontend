@@ -4,7 +4,7 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Quicksand", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono", ui-monospace, monospace;
 
   --color-brand: #2d5bff;
@@ -19,10 +19,32 @@
 
   --color-line: #e3e6eb;
   --color-line-strong: #d5dae1;
+  --color-line-soft: #eef0f3;
 
   --color-surface: #ffffff;
   --color-app: #f6f7f9;
   --color-hover: #f0f2f5;
+  --color-hover-subtle: #f9fafb;
+  --color-selected: #e9ecf0;
+  --color-placeholder: #8b93a1;
+  --color-row-selected: #f5f8ff;
+  --color-row-selected-hover: #eef3ff;
+
+  /* Toasts: solid ink card, only the icon carries the status color. */
+  --color-toast-bg: #111827;
+  --color-toast-success: #4ade80;
+  --color-toast-error: #f87171;
+  --color-toast-warning: #fbbf24;
+  --color-toast-info: #7c9bff;
+
+  --color-live-bg: #fef2f2;
+  --color-live-fg: #b91c1c;
+  --color-live-line: #fecaca;
+  --color-live-dot: #ef4444;
+  --color-shared-bg: #f0fdf4;
+  --color-shared-fg: #15803d;
+  --color-shared-line: #bbf7d0;
+  --color-shared-dot: #22c55e;
 
   --color-success: #16a34a;
   --color-success-soft: #e8f6ec;
@@ -40,17 +62,36 @@
   --color-sticky-purple: #eadcff;
   --color-sticky-cream: #fff6e5;
 
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
+  --text-3xs: 0.625rem;
+  --text-2xs: 0.6875rem;
+  --text-ui: 0.8125rem;
+  --text-md: 0.9375rem;
+  --text-title: 1.375rem;
 
-  --shadow-card: 0 4px 12px rgba(11, 18, 32, 0.06);
-  --shadow-pop: 0 8px 24px rgba(11, 18, 32, 0.1);
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+
+  --shadow-xs: 0 0.0625rem 0.125rem 0 rgb(11 18 32 / 0.06);
+  --shadow-pop:
+    0 0 0 1px rgb(11 18 32 / 0.06), 0 0.25rem 0.75rem -0.125rem rgb(11 18 32 / 0.08),
+    0 0.75rem 1.5rem -0.25rem rgb(11 18 32 / 0.1);
+  --shadow-overlay: 0 0 0 1px rgb(11 18 32 / 0.06), 0 1.5rem 3rem -0.75rem rgb(11 18 32 / 0.28);
+
+  --animate-rise: rise 0.15s ease-out;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(0.5rem);
+    }
+  }
 }
 
 @layer base {
   body {
-    @apply bg-app text-ink font-sans text-[13px] antialiased;
+    @apply bg-surface text-ink font-sans text-ui antialiased;
   }
 
   a {
@@ -59,5 +100,21 @@
 
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-brand;
+  }
+}
+
+@layer components {
+  /* Faint full-width grid behind the dashboard that fades out at the top and bottom. */
+  .grid-backdrop {
+    background-image:
+      linear-gradient(to right, rgb(11 18 32 / 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(11 18 32 / 0.03) 1px, transparent 1px);
+    background-size: 2rem 2rem;
+    background-position: -1px -1px;
+    mask-image: linear-gradient(to bottom, transparent, black 5rem, black calc(100% - 8rem), transparent);
+  }
+
+  .kbd {
+    @apply inline-flex h-5 min-w-5 items-center justify-center rounded-sm border border-line bg-surface px-1 font-mono text-3xs font-medium text-muted shadow-[0_1px_0_var(--color-line)];
   }
 }

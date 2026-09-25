@@ -19,7 +19,7 @@ export function PasswordStrength({ password }: { password: string }) {
         size={[64, 4]}
         className="flex-1"
       />
-      <span className="min-w-20 text-right text-xs text-muted" aria-live="polite">
+      <span className="min-w-20 text-right text-2xs text-muted" aria-live="polite">
         {password ? label : "Strength"}
       </span>
     </div>
@@ -28,7 +28,7 @@ export function PasswordStrength({ password }: { password: string }) {
 
 export function PasswordChecklist({ rules }: { rules: PasswordRule[] }) {
   return (
-    <ul className="mt-2.5 flex flex-col gap-1.5 text-[13px]">
+    <ul className="mt-2.5 flex flex-col gap-1.5 text-ui">
       {rules.map((rule) => (
         <li key={rule.label} className={`flex items-center gap-2 ${rule.passed ? "text-ink" : "text-muted"}`}>
           {rule.passed ? (

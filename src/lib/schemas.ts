@@ -35,3 +35,15 @@ export const resetPasswordSchema = z
 export const backupCodeSchema = z.object({
   backupCode: z.string().trim().min(1, "Enter a backup code."),
 });
+
+export const renameBoardSchema = z.object({
+  name: z.string().trim().min(1, "Enter a board name.").max(80, "Keep the name under 80 characters."),
+});
+
+export const createWorkspaceSchema = z.object({
+  name: z.string().trim().min(2, "Use at least 2 characters.").max(40, "Keep the name under 40 characters."),
+});
+
+export function isValidEmail(value: string) {
+  return z.email().safeParse(value).success;
+}

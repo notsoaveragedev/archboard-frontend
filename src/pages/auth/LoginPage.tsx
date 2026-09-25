@@ -53,16 +53,16 @@ export function LoginPage() {
           autoComplete="current-password"
           placeholder="Enter your password"
           error={fieldErrors.password}
+          labelAction={
+            <Link to="/forgot-password" className="text-ui text-muted hover:text-ink">
+              Forgot password?
+            </Link>
+          }
         />
 
-        <div className="flex items-center justify-between">
-          <Checkbox name="remember" defaultChecked>
-            Keep me logged in for 30 days
-          </Checkbox>
-          <Link to="/forgot-password" className="text-[13px] font-medium">
-            Forgot password?
-          </Link>
-        </div>
+        <Checkbox name="remember" defaultChecked>
+          Keep me logged in for 30 days
+        </Checkbox>
 
         {formError && <Alert type="error" showIcon title={formError} />}
 
@@ -71,7 +71,7 @@ export function LoginPage() {
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-[13px] text-muted">
+      <p className="mt-6 text-center text-ui text-muted">
         New to archboard?{" "}
         <Link to="/signup" className="font-medium">
           Create an account
